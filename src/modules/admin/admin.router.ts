@@ -1,8 +1,10 @@
 import { Router } from "express";
+import { AdminController } from "./admin.controller.js";
+import auth from "../../middlewares/auth.js";
 
 const adminRouter = Router();
 
-adminRouter.get('/users', (req, res) => { res.send("Get all users"); });
-adminRouter.patch('/users/:id', (req, res) => { res.send("Update user status"); });
+adminRouter.get('/users', auth('ADMIN'), AdminController.getAllUsers);
+adminRouter.patch('/users/:id', auth('ADMIN'), AdminController.toggleUserStatus);
 
 export default adminRouter;
