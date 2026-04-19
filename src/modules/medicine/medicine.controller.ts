@@ -1,10 +1,28 @@
 import { NextFunction, Request, Response } from "express";
 import { medicineService } from "./medicine.service.js";
+import paginationSortingHelper from "../../helpers/paginationSortingHelper.js";
 
 const getAllMedicines = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await medicineService.getAllMedicines(req.query);
-        res.status(200).json({ success: true, data: result });
+        const { search, category } = req.query;
+        const { page, limit, skip, sortBy, sortOrder } = paginationSortingHelper(req.query);
+
+        const result = await medicineService.getAllMedicines({
+            search: search as string,
+            category: category as string,
+            page,
+            limit,
+            skip,
+            sortBy,
+            sortOrder
+        });
+
+        res.status(200).json({ 
+            success: true, 
+            message: "Medicines retrieved successfully", 
+            data: result.data, 
+            meta: result.pagination 
+        });
     } catch (error) {
         next(error);
     }
@@ -13,7 +31,11 @@ const getAllMedicines = async (req: Request, res: Response, next: NextFunction) 
 const getMedicineById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const result = await medicineService.getMedicineById(Number(req.params.id));
-        res.status(200).json({ success: true, data: result });
+        res.status(200).json({ 
+            success: true, 
+            message: "Medicine details retrieved successfully", 
+            data: result 
+        });
     } catch (error) {
         next(error);
     }
