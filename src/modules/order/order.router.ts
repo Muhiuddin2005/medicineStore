@@ -1,9 +1,11 @@
 import { Router } from "express";
+import { OrderController } from "./order.controller.js";
+import auth from "../../middlewares/auth.js";
 
 const orderRouter = Router();
 
-orderRouter.post('/', (req, res) => { res.send("Create new order"); });
-orderRouter.get('/', (req, res) => { res.send("Get user orders"); });
-orderRouter.get('/:id', (req, res) => { res.send("Get order details"); });
+orderRouter.post('/', auth('CUSTOMER'), OrderController.createOrder);
+orderRouter.get('/', auth('CUSTOMER'), OrderController.getCustomerOrders);
+orderRouter.get('/:id', auth('CUSTOMER'), OrderController.getOrderById);
 
 export default orderRouter;
