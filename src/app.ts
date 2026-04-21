@@ -9,6 +9,7 @@ import categoryRouter from "./modules/category/category.router.js";
 import orderRouter from "./modules/order/order.router.js";
 import sellerRouter from "./modules/seller/seller.router.js";
 import adminRouter from "./modules/admin/admin.router.js";
+import reviewRouter from "./modules/review/review.router.js";
 
 const app: Application = express();
 
@@ -25,6 +26,7 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/orders", orderRouter);
 app.use("/api/seller", sellerRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/reviews", reviewRouter);
 
 app.get("/", (req, res) => {
     res.send("Pharmacy API is running!");
