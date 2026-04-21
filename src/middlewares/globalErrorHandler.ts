@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express"
 import { Prisma } from "../../generated/prisma/client/index.js";
+import { ZodError } from "zod";
 
 function errorHandler(
     err: any,
@@ -11,12 +12,12 @@ function errorHandler(
     let errorMessage = "Internal Server Error";
     let errorDetails = err;
 
-    // PrismaClientValidationError
+    console.error("CRITICAL BACKEND ERROR TRAP:", err);
+
     if (err instanceof Prisma.PrismaClientValidationError) {
         statusCode = 400;
         errorMessage = "You provide incorrect field type or missing fields!"
     }
-    // PrismaClientKnownRequestError
     else if (err instanceof Prisma.PrismaClientKnownRequestError) {
         if (err.code === "P2025") {
             statusCode = 400;
@@ -44,6 +45,19 @@ function errorHandler(
             statusCode = 400;
             errorMessage = "Can't reach database server"
         }
+    }
+    else if (err instanceof Error) {
+        statusCode = 400;
+        errorMessage = err.message;
+    }
+
+    if (err instanceof ZodError) {
+        statusCode = 400;
+        errorMessage = "Validation Error";
+        errorDetails = err.issues.map(issue => ({
+            field: issue.path[issue.path.length - 1],
+            message: issue.message
+        }));
     }
 
     res.status(statusCode).json({
