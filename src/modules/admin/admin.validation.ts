@@ -6,6 +6,20 @@ const toggleUserStatusSchema = z.object({
     }),
 });
 
+const categorySchema = z.object({
+    body: z.object({
+        name: z.string({ message: "Category name is required" }),
+    }),
+});
+
+const updateCategorySchema = z.object({
+    body: z.object({
+        name: z.string({ message: "Category name is required" }).optional(),
+    }),
+});
+
 export const adminValidation = {
     toggleUserStatusSchema,
+    categorySchema,
+    updateCategorySchema
 };

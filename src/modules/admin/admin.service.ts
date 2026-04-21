@@ -36,7 +36,38 @@ const toggleUserStatus = async (userId: number, targetStatus: boolean) => {
     return safeUser;
 };
 
+const getAllMedicines = async (page: number, limit: number) => {
+    const skip = (page - 1) * limit;
+    const total = await prisma.medicine.count();
+    const medicines = await prisma.medicine.findMany({ skip, take: limit });
+    return { data: medicines, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+};
+
+const getAllOrders = async (page: number, limit: number) => {
+    const skip = (page - 1) * limit;
+    const total = await prisma.order.count();
+    const orders = await prisma.order.findMany({ skip, take: limit, include: { items: true } });
+    return { data: orders, meta: { total, page, limit, totalPages: Math.ceil(total / limit) } };
+};
+
+const createCategory = async (name: string) => {
+    return await prisma.category.create({ data: { name } });
+};
+
+const updateCategory = async (id: number, data: { name?: string }) => {
+    return await prisma.category.update({ where: { id }, data });
+};
+
+const deleteCategory = async (id: number) => {
+    return await prisma.category.delete({ where: { id } });
+};
+
 export const adminService = {
     getAllUsers,
-    toggleUserStatus
+    toggleUserStatus,
+    getAllMedicines,
+    getAllOrders,
+    createCategory,
+    updateCategory,
+    deleteCategory
 };

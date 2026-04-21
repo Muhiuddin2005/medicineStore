@@ -13,13 +13,12 @@ import adminRouter from "./modules/admin/admin.router.js";
 const app: Application = express();
 
 app.use(cors({
-    origin: process.env.APP_URL || "http://localhost:4000",
+    origin: [process.env.APP_URL || "http://localhost:4000", "http://localhost:3001", "http://127.0.0.1:3001"],
     credentials: true
 }))
 
 app.use(express.json());
 
-// Main Routes
 app.use("/api/auth", authRouter);
 app.use("/api/medicines", medicineRouter);
 app.use("/api/categories", categoryRouter);

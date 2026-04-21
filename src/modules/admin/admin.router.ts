@@ -14,4 +14,10 @@ adminRouter.patch(
   AdminController.toggleUserStatus,
 );
 
+adminRouter.get("/medicines", auth("ADMIN"), AdminController.getAllMedicines);
+adminRouter.get("/orders", auth("ADMIN"), AdminController.getAllOrders);
+adminRouter.post("/categories", auth("ADMIN"), validateRequest(adminValidation.categorySchema), AdminController.createCategory);
+adminRouter.put("/categories/:id", auth("ADMIN"), validateRequest(adminValidation.updateCategorySchema), AdminController.updateCategory);
+adminRouter.delete("/categories/:id", auth("ADMIN"), AdminController.deleteCategory);
+
 export default adminRouter;
